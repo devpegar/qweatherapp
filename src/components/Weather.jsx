@@ -86,70 +86,80 @@ const Weather = () => {
         </div>
       ) : (
         <>
-          <header className="flex justify-between items-center">
-            <div className="flex flex-col tb:flex-row tb:items-center tb:gap-3 mx-4 mt-10 tb:mt-0">
-              <p className="text-4xl font-bold">{temp_c}&deg;C</p>
-              <p className="text-xl font-bold">
-                {name}, {region}
-              </p>
-              <div className="flex justify-center items-center mx-2">
-                <p className="text-sm">
-                  {maxtemp_c}&deg; / {mintemp_c}&deg;
+          <header className="flex flex-col tb:flex-row tb:justify-between gap-3 items-center">
+            <div className="flex justify-center tb:justify-start items-center gap-3 ">
+              <img className="w-2/12" src="/logo-qw.png" alt="Logo" />
+              <h1 className="text-3xl font-bold">QWeather</h1>
+              <h2 className="text-sm">El tiempo a tiempo</h2>
+            </div>
+            <Buscar />
+          </header>
+          <div className="tb:grid tb:grid-cols-2">
+            <div className="flex justify-between items-center">
+              <div className="flex flex-col mx-4 mt-10 tb:mt-0">
+                <p className="text-4xl font-bold">{temp_c}&deg;C</p>
+                <p className="text-xl font-bold">
+                  {name}, {region}
                 </p>
-                <p className="text-sm">
-                  | Sensación térmica: {feelslike_c}&deg;
-                </p>
+                <div className="flex justify-center items-center mx-2">
+                  <p className="text-sm">
+                    {maxtemp_c}&deg; / {mintemp_c}&deg;
+                  </p>
+                  <p className="text-sm">
+                    | Sensación térmica: {feelslike_c}&deg;
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col justify-center">
+                <img src={condition.icon} alt="" />
+                <p className="text-sm italic">{condition.text}</p>
               </div>
             </div>
-
-            <div className="flex flex-col justify-center">
-              <img src={condition.icon} alt="" />
-              <p className="text-sm italic">{condition.text}</p>
+            <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
+              {days ? (
+                days.map((day, index) => {
+                  return (
+                    <DayWeather
+                      key={index}
+                      day={getNameDay(day.date)}
+                      maxtemp={day.data.maxtemp_c}
+                      mintemp={day.data.mintemp_c}
+                      rain={day.data.daily_chance_of_rain}
+                      icon={day.data.condition.icon}
+                    />
+                  );
+                })
+              ) : (
+                <div>Cargando...</div>
+              )}
             </div>
-          </header>
+            <div className="bg-indigo-300 mx-4 my-5 p-3 flex overflow-y-auto scrollbar-hide rounded-xl gap-2">
+              {hours ? (
+                hours.map((hour, index) => {
+                  return (
+                    <HourlyWheather
+                      key={index}
+                      hora={hour.time.slice(11)}
+                      icon={hour.condition.icon}
+                      temp={hour.temp_c}
+                    />
+                  );
+                })
+              ) : (
+                <div>Loading...</div>
+              )}
+            </div>
+            <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
+              {astro ? (
+                <SunRise salida={sunrise} puesta={sunset} />
+              ) : (
+                <div>Cargando...</div>
+              )}
+            </div>
+          </div>
 
-          <div className="bg-indigo-300 mx-4 my-5 p-3 flex overflow-y-auto scrollbar-hide rounded-xl gap-2">
-            {hours ? (
-              hours.map((hour, index) => {
-                return (
-                  <HourlyWheather
-                    key={index}
-                    hora={hour.time.slice(11)}
-                    icon={hour.condition.icon}
-                    temp={hour.temp_c}
-                  />
-                );
-              })
-            ) : (
-              <div>Loading...</div>
-            )}
-          </div>
-          <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
-            {days ? (
-              days.map((day, index) => {
-                return (
-                  <DayWeather
-                    key={index}
-                    day={getNameDay(day.date)}
-                    maxtemp={day.data.maxtemp_c}
-                    mintemp={day.data.mintemp_c}
-                    rain={day.data.daily_chance_of_rain}
-                    icon={day.data.condition.icon}
-                  />
-                );
-              })
-            ) : (
-              <div>Cargando...</div>
-            )}
-          </div>
-          <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
-            {astro ? (
-              <SunRise salida={sunrise} puesta={sunset} />
-            ) : (
-              <div>Cargando...</div>
-            )}
-          </div>
-          <footer className="container flex justify-end">
+          <footer className="container flex justify-end tb:col-start-2 tb:col-end-3">
             <p>
               Powered by{" "}
               <a href="https://www.weatherapi.com/" title="Free Weather API">

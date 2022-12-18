@@ -1,5 +1,6 @@
 {
   "name": "qweather",
+  "homepage": "https://devpeg.ar/proyectos/qweather",
   "private": true,
   "version": "1.0.0",
   "type": "module",
