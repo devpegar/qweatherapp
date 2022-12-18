@@ -1,15 +1,30 @@
 import { useState, useEffect } from "react";
 import Buscar from "./Buscar";
 import Spinner from "./Spinner";
+import DayWeather from "./DayWeather";
 import HourlyWheather from "./HourlyWheather";
+import SunRise from "./SunRise";
 import Hoursx24 from "../functions/Hoursx24";
+import Dayx3 from "../functions/Dayx3";
 
 const Weather = () => {
   const [currentWeather, setCurrentWeather] = useState({});
   const [forecastDay, setForecastDay] = useState({});
   const [forecastHours, setForecastHours] = useState({});
+  const [astro, setAstro] = useState({});
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState({});
+
+  const nameDays = [
+    "Domingo",
+    "Lunes",
+    "Martes",
+    "Miércoles",
+    "Jueves",
+    "Viernes",
+    "Sábado",
+  ];
+  const numberNowDay = new Date().getDay();
 
   if (!navigator.geolocation) {
     alert("Geolocation is not available");
@@ -24,9 +39,11 @@ const Weather = () => {
       const getWeather = async () => {
         const response = await fetch(url);
         const data = await response.json();
+        console.log(data);
         setCurrentWeather(data.current);
         setForecastDay(data.forecast.forecastday[0].day);
         setForecastHours(data.forecast.forecastday);
+        setAstro(data.forecast.forecastday[0].astro);
         setLocation(data.location);
         setLoading(false);
       };
@@ -47,7 +64,20 @@ const Weather = () => {
   const { temp_c, condition, feelslike_c } = currentWeather;
   const { name, region } = location;
   const { maxtemp_c, mintemp_c } = forecastDay;
+  const { sunrise, sunset } = astro;
+  const days = Dayx3(forecastHours);
   const hours = Hoursx24(forecastHours);
+
+  const getNameDay = (date) => {
+    const newDate = date.replace("-", "/");
+    const numberDay = new Date(newDate).getDay();
+    if (numberDay === numberNowDay) {
+      return "Hoy";
+    } else {
+      const nameDay = nameDays[numberDay];
+      return nameDay;
+    }
+  };
   return (
     <div className="h-full text-white">
       {loading ? (
@@ -56,25 +86,29 @@ const Weather = () => {
         </div>
       ) : (
         <>
-          <div className="flex justify-between items-center mx-4 mt-10">
-            <p className="text-4xl font-bold">{temp_c}&deg;C</p>
+          <header className="flex justify-between items-center">
+            <div className="flex flex-col tb:flex-row tb:items-center tb:gap-3 mx-4 mt-10 tb:mt-0">
+              <p className="text-4xl font-bold">{temp_c}&deg;C</p>
+              <p className="text-xl font-bold">
+                {name}, {region}
+              </p>
+              <div className="flex justify-center items-center mx-2">
+                <p className="text-sm">
+                  {maxtemp_c}&deg; / {mintemp_c}&deg;
+                </p>
+                <p className="text-sm">
+                  | Sensación térmica: {feelslike_c}&deg;
+                </p>
+              </div>
+            </div>
+
             <div className="flex flex-col justify-center">
               <img src={condition.icon} alt="" />
               <p className="text-sm italic">{condition.text}</p>
             </div>
-          </div>
-          <div className="mx-4 py-2">
-            <p className="text-xl font-bold">
-              {name}, {region}
-            </p>
-          </div>
-          <div className="mx-4 py-2">
-            <p className="text-sm">
-              {maxtemp_c}&deg; / {mintemp_c}&deg; | Sensación térmica:{" "}
-              {feelslike_c}&deg;
-            </p>
-          </div>
-          <div className="bg-indigo-300 mx-4 my-10 p-3 flex overflow-y-auto scrollbar-hide rounded-xl gap-2">
+          </header>
+
+          <div className="bg-indigo-300 mx-4 my-5 p-3 flex overflow-y-auto scrollbar-hide rounded-xl gap-2">
             {hours ? (
               hours.map((hour, index) => {
                 return (
@@ -90,6 +124,39 @@ const Weather = () => {
               <div>Loading...</div>
             )}
           </div>
+          <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
+            {days ? (
+              days.map((day, index) => {
+                return (
+                  <DayWeather
+                    key={index}
+                    day={getNameDay(day.date)}
+                    maxtemp={day.data.maxtemp_c}
+                    mintemp={day.data.mintemp_c}
+                    rain={day.data.daily_chance_of_rain}
+                    icon={day.data.condition.icon}
+                  />
+                );
+              })
+            ) : (
+              <div>Cargando...</div>
+            )}
+          </div>
+          <div className="bg-indigo-300 rounded-xl mx-4 my-5 p-3">
+            {astro ? (
+              <SunRise salida={sunrise} puesta={sunset} />
+            ) : (
+              <div>Cargando...</div>
+            )}
+          </div>
+          <footer className="container flex justify-end">
+            <p>
+              Powered by{" "}
+              <a href="https://www.weatherapi.com/" title="Free Weather API">
+                WeatherAPI.com
+              </a>
+            </p>
+          </footer>
         </>
       )}
     </div>
