@@ -17,7 +17,6 @@ const Weather = () => {
   const [astro, setAstro] = useState({});
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState({});
-  const [city, setCity] = useState("");
 
   const optionsRequest = {};
   // Arreglo con los nombres de los días de la semana
@@ -71,25 +70,20 @@ const Weather = () => {
   }
 
   const handleOnSearchChange = (searchData) => {
-    if (!searchData) {
-      return;
-    } else {
-      setCity(searchData);
-      (async () => {
-        optionsRequest.method = "GET";
-        optionsRequest.url = `http://api.weatherapi.com/v1/forecast.json?key=${
-          import.meta.env.VITE_API_KEY
-        }&q=${city}&lang=es&days=3`;
+    (async () => {
+      optionsRequest.method = "GET";
+      optionsRequest.url = `http://api.weatherapi.com/v1/forecast.json?key=${
+        import.meta.env.VITE_API_KEY
+      }&q=${searchData}&lang=es&days=3`;
 
-        const data = await getWeather(optionsRequest);
-        setCurrentWeather(data.current);
-        setForecastDay(data.forecast.forecastday[0].day);
-        setForecastHours(data.forecast.forecastday);
-        setAstro(data.forecast.forecastday[0].astro);
-        setLocation(data.location);
-        setLoading(false);
-      })();
-    }
+      const data = await getWeather(optionsRequest);
+      setCurrentWeather(data.current);
+      setForecastDay(data.forecast.forecastday[0].day);
+      setForecastHours(data.forecast.forecastday);
+      setAstro(data.forecast.forecastday[0].astro);
+      setLocation(data.location);
+      setLoading(false);
+    })();
   };
 
   const { temp_c, condition, feelslike_c } = currentWeather;
