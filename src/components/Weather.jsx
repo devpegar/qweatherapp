@@ -139,7 +139,11 @@ const Weather = () => {
               </div>
 
               <div className="flex flex-col justify-center">
-                <img src={condition.icon} alt="" />
+                <img
+                  className="w-20 mx-auto"
+                  src={condition.icon}
+                  alt="icon condition"
+                />
                 <p className="text-sm text-center italic">{condition.text}</p>
               </div>
             </div>
