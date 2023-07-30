@@ -117,7 +117,7 @@ const Weather = () => {
               <h1 className="text-3xl font-bold">QWeather</h1>
               <h2 className="text-sm">El tiempo a tiempo</h2>
             </div>
-            <div className="z-10">
+            <div className="z-10 lt:mr-3 mr-0">
               <Search onSearchChange={handleOnSearchChange} />
             </div>
           </header>
@@ -191,8 +191,8 @@ const Weather = () => {
             </div>
           </div>
 
-          <footer className="container flex justify-end tb:col-start-2 tb:col-end-3">
-            <p>
+          <footer className="flex justify-center tb:justify-end tb:mr-3">
+            <p className="lt:mr-3 mr-0">
               Powered by{" "}
               <a href="https://www.weatherapi.com/" title="Free Weather API">
                 WeatherAPI.com
