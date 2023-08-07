@@ -113,7 +113,11 @@ const Weather = () => {
         <>
           <header className="flex flex-col tb:flex-row tb:justify-between gap-3 items-center">
             <div className="flex justify-center tb:justify-start items-center gap-3 ">
-              <img className="w-2/12" src="/logo-qw.png" alt="Logo" />
+              <img
+                className="w-2/12"
+                src="/proyectos/qweather/logo-qw.png"
+                alt="Logo"
+              />
               <h1 className="text-3xl font-bold">QWeather</h1>
               <h2 className="text-sm">El tiempo a tiempo</h2>
             </div>
