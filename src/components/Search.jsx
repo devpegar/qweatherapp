@@ -15,7 +15,7 @@ const Search = ({ onSearchChange }) => {
     } else {
       (async () => {
         options.method = "GET";
-        options.url = `http://api.weatherapi.com/v1/search.json?&key=${
+        options.url = `https://api.weatherapi.com/v1/search.json?&key=${
           import.meta.env.VITE_API_KEY
         }&q=${inputValue}&lang=es`;
 
@@ -25,23 +25,13 @@ const Search = ({ onSearchChange }) => {
     }
   }, [inputValue]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (city === "" || !city) return;
-
-    onSearchChange(city);
-  };
-
   const handleReloadPage = () => {
     location.reload();
   };
   return (
     <div className="w-72 font-medium relative">
       <div className="flex justify-between items-center gap-3">
-        <form
-          onSubmit={onSubmit}
-          className="flex justify-between items-center bg-white text-gray-600 w-full p-2 rounded"
-        >
+        <form className="flex justify-between items-center bg-white text-gray-600 w-full p-2 rounded">
           <input
             type="text"
             placeholder="Buscar ciudad..."
@@ -50,7 +40,7 @@ const Search = ({ onSearchChange }) => {
             onChange={(e) => setInputValue(e.target.value)}
             onClick={(e) => (e.target.value = "")}
           />
-          <button type="submit">
+          <button>
             <AiOutlineSearch
               size={20}
               className="text-gray-700 cursor-pointer"
@@ -72,6 +62,7 @@ const Search = ({ onSearchChange }) => {
                 setCity(city.name);
                 setInputValue("");
                 setSearch([]);
+                onSearchChange(city.name);
               }}
             >
               {city.name}
