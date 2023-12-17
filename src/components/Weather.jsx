@@ -42,7 +42,7 @@ const Weather = () => {
       const coords = pos.coords;
       const { latitude, longitude } = coords;
       optionsRequest.method = "GET";
-      optionsRequest.url = `http://api.weatherapi.com/v1/forecast.json?key=${
+      optionsRequest.url = `https://api.weatherapi.com/v1/forecast.json?key=${
         import.meta.env.VITE_API_KEY
       }&q=${latitude},${longitude}&lang=es&days=3`;
 
@@ -72,7 +72,7 @@ const Weather = () => {
   const handleOnSearchChange = (searchData) => {
     (async () => {
       optionsRequest.method = "GET";
-      optionsRequest.url = `http://api.weatherapi.com/v1/forecast.json?key=${
+      optionsRequest.url = `https://api.weatherapi.com/v1/forecast.json?key=${
         import.meta.env.VITE_API_KEY
       }&q=${searchData}&lang=es&days=3`;
 
